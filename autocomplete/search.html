@@ -1,37 +1,47 @@
-#!/usr/local/bin/python3
+<!DOCTYPE html>
+<html lang="en">
+<head>sd
+	<meta charset="utf-8" />
+	<title>AJAX demo</title>
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+    <link rel="stylesheet" type="text/css" href="css/search_product.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/search.js"></script>
+    <script>
+	$(document).ready(function() {
+		var availableTags = products;
+	$("#search_term").autocomplete({
+		availableTags
+	});
+	} );
+    </script>
+</head>
 
-import cgi, json
-import os
-import mysql.connector
+<body id="main">
 
-def main():
-    print("Content-Type: application/json\n\n")
-    form = cgi.FieldStorage()
-    term = form.getvalue('search_term')
-        
-    conn = mysql.connector.connect(user='hopkins', password='fakepass', host='localhost', database='biotest')
-    cursor = conn.cursor()
-    
-    qry = """
-          SELECT locus_id, product
-            FROM genes
-           WHERE product LIKE %s
-    """
-    cursor.execute(qry, ('%' + term + '%', ))
+	<h1>E. coli gene search</h1>
+    <form name="gene_search" id="gene_search" action="">
+        <input name="search_term" type="search" value="" autofocus="autofocus" placeholder="Enter a search term"/>
+        <input name="submit" type="submit" id="submit" value="submit">
+    </form>
+    <section id='results'>
+        <p>
+            <span id='match_count'>0</span> match(es) found.
+        </p>
+        <table>
+            <thead>
+            <tr>
+                <td>Locus tag</td>
+                <td>Product</td>
+            </tr>
+            </thead>
+            <tbody>
+                <!-- this will be filled in by javascript when there are results -->
+            </tbody>
+    </section>
 
-    #results = { 'match_count': 0, 'matches': list() }
-    #for (locus_id, product) in cursor:
-    #   results['matches'].append({'locus_id': locus_id, 'product': product})
-    #    results['match_count'] += 1
-	
-    products = []
-    for (locus_id, product) in cursor:
-        products.append(str(product))
-	
-    conn.close()
+</body>
 
-    print(json.dumps(products))
-
-
-if __name__ == '__main__':
-    main()
+</html>
